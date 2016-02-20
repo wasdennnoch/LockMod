@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="line_width_default">3dp</dimen>
+    <dimen name="dot_size_default">12dp</dimen>
+    <dimen name="dot_size_activated_default">28dp</dimen>
+    
+</resources>

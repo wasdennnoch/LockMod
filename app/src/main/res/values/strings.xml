@@ -1,0 +1,115 @@
+<resources>
+
+    <string name="app_name">LockMod</string>
+
+    <string name="about">LockMod - About</string>
+
+    <string name="app_desc">Adds some tweaks to the Lollipop AOSP lockscreen and changes its appearance and behaviour</string>
+    <string name="not_enabled_warning">This module isn\'t activated, changes will have no efect</string>
+    <string name="wrong_version_warning">You are running an Android version below Lollipop (API Version: %d &lt; 21), this module will most probably have no effect on your lockscreen!</string>
+    <string name="menu_preview">Toggle Preview</string>
+    <string name="menu_calc">Calculator</string>
+
+    <string name="dialog_calc_title">Convert dp to px</string>
+    <string name="dialog_calc_enter_dp_text">Enter dp value:</string>
+    <string name="dialog_calc_in_px_text">In px:</string>
+    <string name="dialog_calc_out_px_format">%dpx</string>
+    <string name="dialog_calc_positive">OK</string>
+
+
+    <string name="settings_colors_title">Colors</string>
+    <string name="settings_colors_regular_color_title">Regular Color</string>
+    <string name="settings_colors_regular_color">The normal color when drawing a pattern. Default: #FFFFFFFF</string>
+    <string name="settings_colors_error_color_title">Error Color</string>
+    <string name="settings_colors_error_color">The color of a wrong pattern. Default: #FFF4511E</string>
+    <string name="settings_colors_success_color_title">Success Color</string>
+    <string name="settings_colors_success_color">The color of a correct pattern. Hardly to see because the pattern is cleared right after a correct input. Default: #FFFFFFFF</string>
+    <string name="settings_colors_disable_last_segment_alpha_title">Disable last segment alpha</string>
+    <string name="settings_colors_disable_last_segment_alpha">The line between your finger and the last selected dot changes its alpha value based on the distance</string>
+
+    <string name="settings_dimensions_title">Dimensions</string>
+    <string name="settings_dimensions_line_width_title">Line width</string>
+    <string name="settings_dimensions_line_width">The width of the line you draw to connect the dots. Default: 3dp</string>
+    <string name="settings_dimensions_dot_size_title">Dot size</string>
+    <string name="settings_dimensions_dot_size">The normal size of every dot of the pattern. Default: 12dp</string>
+    <string name="settings_dimensions_dot_size_activated_title">Dot size activated</string>
+    <string name="settings_dimensions_dot_size_activated">The size of an activated dot of the pattern (animated when clicked / hovered). Default: 28dp</string>
+
+    <string name="settings_stroke_title">Stroke</string>
+    <string name="settings_stroke_stroke_dots_title">Stroke dots</string>
+    <string name="settings_stroke_stroke_dots">Enable to render dots as stroked circles instead of filled ones</string>
+    <string name="settings_stroke_stroke_width_title">Stroke width</string>
+    <string name="settings_stroke_stroke_dash_title">Dashed stroke</string>
+    <string name="settings_stroke_stroke_dash_multiplier_on">On time multiplier</string>
+    <string name="settings_stroke_stroke_dash_multiplier_off">Off time multiplier</string>
+
+    <string name="settings_blur_title">Blurring</string>
+    <string name="settings_blur_info">Unfortunately, blurring needs hardware acceleration to be disabled. If you enable blurring, the lock pattern view might become laggy</string>
+    <string name="settings_blur_dots_title">Blur dots</string>
+    <string name="settings_blur_dots_radius_title">Dot blur radius</string>
+    <string name="settings_blur_dots_mode_title">Dot blur mode</string>
+    <string name="settings_blur_line_title">Blur line</string>
+    <string name="settings_blur_line_radius_title">Line blur radius</string>
+    <string name="settings_blur_line_mode_title">Line blur mode</string>
+    <string-array name="settings_blur_mode_modes">
+        <item>Normal</item>
+        <item>Solid</item>
+        <item>Outer</item>
+        <item>Inner</item>
+    </string-array>
+    <string-array name="settings_blur_mode_modes_values">
+        <item>NORMAL</item>
+        <item>SOLID</item>
+        <item>OUTER</item>
+        <item>INNER</item>
+    </string-array>
+
+    <string name="settings_timing_title">Timing</string>
+    <string name="settings_timing_clear_timeout_title">Clear timeout</string>
+    <string name="settings_timing_clear_timeout">The time after which a wrong pattern is cleared. Default: 2000ms</string>
+    <string name="settings_timing_appear_animation_duration_title">Appear animation duration</string>
+    <string name="settings_timing_appear_animation_duration">The duration in takes for the dots to move up from the bottom and fade in. Default: 220ms</string>
+    <string name="settings_timing_appear_animation_start_translation_title">Appear animation start translation</string>
+    <string name="settings_timing_appear_animation_start_translation">The multiplier to shift the dots down before the animation starts. Default: 1.5x</string>
+    <string name="settings_timing_appear_animation_delay_scale_title">Appear animation delay scale</string>
+    <string name="settings_timing_appear_animation_delay_scale">The delay it takes per dot to appear after each other. Default: 2.0x</string>
+    <string name="settings_timing_disappear_animation_duration_title">Disappear animation duration</string>
+    <string name="settings_timing_disappear_animation_duration">The duration in takes for the dots to move up from the pattern view and fade out. Default: 125ms</string>
+    <string name="settings_timing_disappear_animation_start_translation_title">Disappear animation start translation</string>
+    <string name="settings_timing_disappear_animation_start_translation">The multiplier to move the dots up during the animation. Default: 1.2x</string>
+    <string name="settings_timing_disappear_animation_delay_scale_title">Disappear animation delay scale</string>
+    <string name="settings_timing_disappear_animation_delay_scale">The delay it takes per row to disappear after each other. Default: 0.8x</string>
+
+    <string name="settings_miscellaneous_title">Miscellaneous</string>
+    <string name="settings_miscellaneous_disable_clipping_title">Disable clipping</string>
+    <string name="settings_miscellaneous_disable_clipping">Not working with hardware acceleration disabled (blurring)</string>
+    <string name="settings_miscellaneous_rainbow_shader_title">Rainbow shader</string>
+    <string name="settings_miscellaneous_rainbow_shader">Too crazy to be true. Use at your own risk. Unicorns will find and eat you.</string>
+
+    <string name="settings_app_title">App</string>
+    <string name="settings_app_preview_pattern_size_title">Preview pattern size</string>
+    <string name="settings_app_preview_pattern_size">Requires app restart. Note: This is only changing the pattern size of the preview, not your actual lock pattern</string>
+    <string name="settings_app_hide_launcher_icon_title">Hide launcher icon</string>
+    <string name="settings_app_hide_launcher_icon">May require launcher restart</string>
+    <string name="settings_app_debug_log_title">Debug log</string>
+    <string name="settings_app_debug_log">Should only be enabled for testing/debugging, causes lag</string>
+    <string name="settings_app_always_reload_title">Always reload settings</string>
+    <string name="settings_app_always_reload">If disabled, the SystemUI has to be restarted in order to apply changes. Might decrease lag if disabled. Restart reqired to re-enable</string>
+    <string name="settings_app_info_title">About LockMod</string>
+
+    <string name="about_author">Developed by \"MrWasdennnoch\"</string>
+    <string name="about_version">Version %1$s (%2$d)</string>
+    <string name="about_email_chooser_title">Contact via&#8230;</string>
+
+    <!--<string name="settings_miscellaneous_random_activation_animation_title">Random activation animation</string>
+    <string name="settings_miscellaneous_random_activation_animation">Play the activation animation at the given interval at a given number of random dots</string>
+    <string name="settings_miscellaneous_random_activation_animation_count_title">Random activated dots</string>
+    <string name="settings_miscellaneous_random_activation_animation_count">The number of random activated dots at the given interval</string>
+    <string name="settings_miscellaneous_random_activation_animation_interval_title">Random activated interval</string>-->
+
+
+    <!-- Color Picker -->
+    <string name="dialog_color_picker">Color Picker</string>
+    <string name="press_color_to_apply">Press on Color to apply</string>
+
+</resources>

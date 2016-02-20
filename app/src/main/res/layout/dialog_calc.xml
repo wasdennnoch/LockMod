@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="24dp">
+
+    <RelativeLayout
+        android:id="@+id/one"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/enter_dp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/dp"
+            android:text="@string/dialog_calc_enter_dp_text"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/dp"
+            android:layout_centerVertical="true"/>
+
+        <EditText
+            android:id="@+id/dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:inputType="number"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/one"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/out_px_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/px"
+            android:text="@string/dialog_calc_in_px_text"/>
+
+        <TextView
+            android:id="@+id/px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="not_enabled_color">#BB0000</color>
+    <color name="not_enabled_bg">#000000</color>
+    <color name="lock_pattern_bg">#222222</color>
+
+    <color name="regular_color_default">#FFFFFFFF</color>
+    <color name="error_color_default">#FFF4511E</color>
+    <color name="success_color_default">#FFFFFFFF</color>
+
+</resources>

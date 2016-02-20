@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/not_enabled_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/not_enabled_bg"
+        android:padding="4dp"
+        android:text="@string/not_enabled_warning"
+        android:textColor="@color/not_enabled_color"
+        android:textSize="15sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/not_enabled_warning">
+
+        <FrameLayout
+            android:id="@+id/fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <tk.wasdennnoch.lockmod.LockPatternView
+            android:id="@+id/lockPatternView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/lock_pattern_bg"
+            android:padding="8dp"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
