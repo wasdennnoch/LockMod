@@ -91,10 +91,6 @@
     <string name="settings_app_preview_pattern_size">Requires app restart. Note: This is only changing the pattern size of the preview, not your actual lock pattern</string>
     <string name="settings_app_hide_launcher_icon_title">Hide launcher icon</string>
     <string name="settings_app_hide_launcher_icon">May require launcher restart</string>
-    <string name="settings_app_debug_log_title">Debug log</string>
-    <string name="settings_app_debug_log">Should only be enabled for testing/debugging, causes lag</string>
-    <string name="settings_app_always_reload_title">Always reload settings</string>
-    <string name="settings_app_always_reload">If disabled, the SystemUI has to be restarted in order to apply changes. Might decrease lag if disabled. Restart reqired to re-enable</string>
     <string name="settings_app_info_title">About LockMod</string>
 
     <string name="about_author">Developed by \"MrWasdennnoch\"</string>

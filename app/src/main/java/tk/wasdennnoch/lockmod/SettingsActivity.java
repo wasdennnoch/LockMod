@@ -254,6 +254,7 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                 case "disappear_animation_delay_scale":
                 case "disable_clipping":
                 case "preview_pattern_size":
+                case "about":
                     break;
                 case "hide_launcher_icon":
                     int mode = prefs.getBoolean("hide_launcher_icon", false) ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED : PackageManager.COMPONENT_ENABLED_STATE_ENABLED;

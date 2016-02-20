@@ -25,8 +25,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class XposedHook implements IXposedHookLoadPackage {
 
-    private static boolean debug = false;
-    private static boolean reload_settings = true;
+    private static final boolean DEBUG = false;
 
     private XSharedPreferences mPrefs = new XSharedPreferences(XposedHook.class.getPackage().getName());
 
@@ -60,11 +59,8 @@ public class XposedHook implements IXposedHookLoadPackage {
 
         } else if (lpparam.packageName.equals(PACKAGE_SYSTEMUI)) {
 
-            if (reload_settings)
-                mPrefs.reload();
+            mPrefs.reload();
 
-            reload_settings = mPrefs.getBoolean("always_reload", true);
-            debug = mPrefs.getBoolean("debug_log", false);
             hookConstructor(lpparam.classLoader);
             hookOnFinishInflate(lpparam.classLoader);
 
@@ -345,7 +341,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     }
 
     private void logD(String msg) {
-        if (debug) log("[DEBUG] " + msg);
+        if (DEBUG) log("[DEBUG] " + msg);
     }
 
 

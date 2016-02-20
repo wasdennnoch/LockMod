@@ -313,18 +313,6 @@
             android:summary="@string/settings_app_hide_launcher_icon"
             android:title="@string/settings_app_hide_launcher_icon_title"/>
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="debug_log"
-            android:summary="@string/settings_app_debug_log"
-            android:title="@string/settings_app_debug_log_title"/>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="always_reload"
-            android:summary="@string/settings_app_always_reload"
-            android:title="@string/settings_app_always_reload_title"/>
-
         <Preference
             android:key="about"
             android:title="@string/settings_app_info_title" >
