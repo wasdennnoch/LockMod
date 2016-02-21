@@ -17,6 +17,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,7 +51,6 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         mFragment = findViewById(R.id.fragment);
         mLockPatternView.setOnPatternListener(this);
 
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             ((TextView) findViewById(R.id.not_enabled_warning)).setText(String.format(getString(R.string.wrong_version_warning), Build.VERSION.SDK_INT));
         } else {
@@ -68,16 +68,19 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         mFragment.post(new Runnable() {
             @Override
             public void run() {
-                mFragmentHeight = mFragment.getMeasuredHeight();
-                setLockViewState(mPreviewVisible, false);
+                mFragmentHeight = mFragment.getHeight();
+                setLockViewState(mPreviewVisible);
+                //mLockPatternView.setVisibility(View.GONE);
+                //mLockPatternView.setY(mFragmentHeight);
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-            getMenuInflater().inflate(R.menu.menu_settings, menu);
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        if (isLandscape())
+            menu.findItem(R.id.action_preview_toggle).setVisible(false);
         return true;
     }
 
@@ -86,16 +89,13 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         switch (item.getItemId()) {
             case R.id.action_preview_toggle:
                 if (mPreviewVisible) {
-                    // Hide the preview
-                    setLockViewState(false, true);
+                    setLockViewState(false); // Hide the preview
                 } else {
-                    // Show the preview
-                    setLockViewState(true, true);
+                    setLockViewState(true); // Show the preview
                 }
                 mPreviewVisible = !mPreviewVisible;
                 return true;
             case R.id.action_calc:
-
                 View v = View.inflate(this, R.layout.dialog_calc, null);
                 final TextView tv = (TextView) v.findViewById(R.id.px);
                 tv.setText(getString(R.string.dialog_calc_out_px_format, 0));
@@ -117,13 +117,11 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                         }
                     }
                 });
-
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_calc_title)
                         .setPositiveButton(R.string.dialog_calc_positive, null)
                         .setView(v)
                         .show();
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -133,7 +131,7 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
     @Override
     public void onBackPressed() {
         if (mPreviewVisible) {
-            setLockViewState(false, true);
+            setLockViewState(false);
             mPreviewVisible = false;
         } else {
             super.onBackPressed();
@@ -141,57 +139,46 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         }
     }
 
-    private void setLockViewState(boolean show, boolean animate) {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+    private boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private void setLockViewState(boolean show) {
+        if (isLandscape())
             return;
-
+        ViewPropertyAnimator anim = mLockPatternView.animate()
+                .setDuration(750)
+                .setInterpolator(new AccelerateDecelerateInterpolator());
         if (show) {
-            if (animate) {
-                mLockPatternView.animate()
-                        .y(mFragmentHeight - mLockPatternHeight)
-                        .setDuration(750)
-                        .setInterpolator(new AccelerateDecelerateInterpolator())
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                mLockPatternView.setVisibility(View.VISIBLE);
-                            }
+            anim.y(mFragmentHeight - mLockPatternHeight)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            mLockPatternView.setVisibility(View.VISIBLE);
+                        }
 
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                mFragment.getLayoutParams().height = mFragmentHeight - mLockPatternHeight;
-                                mFragment.requestLayout();
-                            }
-                        })
-                        .start();
-            } else {
-                mLockPatternView.setY(mFragmentHeight - mLockPatternHeight);
-                mLockPatternView.setVisibility(View.VISIBLE);
-            }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mFragment.getLayoutParams().height = mFragmentHeight - mLockPatternHeight;
+                            mFragment.requestLayout();
+                        }
+                    });
         } else {
-            if (animate) {
-                mLockPatternView.animate()
-                        .y(mFragmentHeight)
-                        .setDuration(750)
-                        .setInterpolator(new AccelerateDecelerateInterpolator())
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                mFragment.getLayoutParams().height = mFragmentHeight;
-                                mFragment.requestLayout();
-                            }
+            anim.y(mFragmentHeight)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            mFragment.getLayoutParams().height = mFragmentHeight;
+                            mFragment.requestLayout();
+                        }
 
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                mLockPatternView.setVisibility(View.GONE);
-                            }
-                        })
-                        .start();
-            } else {
-                mLockPatternView.setVisibility(View.GONE);
-                mLockPatternView.setY(mFragmentHeight);
-            }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mLockPatternView.setVisibility(View.GONE);
+                        }
+                    });
         }
+        anim.start();
     }
 
     @Override
@@ -254,6 +241,8 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                 case "disappear_animation_delay_scale":
                 case "disable_clipping":
                 case "preview_pattern_size":
+                case "debug_log":
+                case "always_reload":
                 case "about":
                     break;
                 case "hide_launcher_icon":

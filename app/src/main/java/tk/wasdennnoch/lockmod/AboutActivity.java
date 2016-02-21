@@ -41,24 +41,13 @@ public class AboutActivity extends Activity {
         findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://github.com/wasdennnoch")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://github.com/wasdennnoch/LockMod")));
             }
         });
         findViewById(R.id.xda).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://forum.xda-developers.com/xposed/modules/")));
-            }
-        });
-        findViewById(R.id.mail).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","wasdennnochmail@gmail.com", null));
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback to LockMod");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"wasdennnochmail@gmail.com"});
-                startActivity(Intent.createChooser(intent, getString(R.string.about_email_chooser_title)));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://forum.xda-developers.com/xposed/modules/tweak-lollipop-lockscreen-t3319133/")));
             }
         });
         findViewById(R.id.icon).setOnClickListener(new View.OnClickListener() {

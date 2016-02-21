@@ -8,7 +8,7 @@
     <string name="not_enabled_warning">This module isn\'t activated, changes will have no efect</string>
     <string name="wrong_version_warning">You are running an Android version below Lollipop (API Version: %d &lt; 21), this module will most probably have no effect on your lockscreen!</string>
     <string name="menu_preview">Toggle Preview</string>
-    <string name="menu_calc">Calculator</string>
+    <string name="menu_calc">Unit Converter</string>
 
     <string name="dialog_calc_title">Convert dp to px</string>
     <string name="dialog_calc_enter_dp_text">Enter dp value:</string>
@@ -25,7 +25,7 @@
     <string name="settings_colors_success_color_title">Success Color</string>
     <string name="settings_colors_success_color">The color of a correct pattern. Hardly to see because the pattern is cleared right after a correct input. Default: #FFFFFFFF</string>
     <string name="settings_colors_disable_last_segment_alpha_title">Disable last segment alpha</string>
-    <string name="settings_colors_disable_last_segment_alpha">The line between your finger and the last selected dot changes its alpha value based on the distance</string>
+    <string name="settings_colors_disable_last_segment_alpha">Per default, the line between your finger and the last selected dot changes its alpha value based on the distance</string>
 
     <string name="settings_dimensions_title">Dimensions</string>
     <string name="settings_dimensions_line_width_title">Line width</string>
@@ -91,6 +91,10 @@
     <string name="settings_app_preview_pattern_size">Requires app restart. Note: This is only changing the pattern size of the preview, not your actual lock pattern</string>
     <string name="settings_app_hide_launcher_icon_title">Hide launcher icon</string>
     <string name="settings_app_hide_launcher_icon">May require launcher restart</string>
+    <string name="settings_app_debug_log_title">Debug log</string>
+    <string name="settings_app_debug_log">Should only be enabled for testing/debugging, causes lag</string>
+    <string name="settings_app_always_reload_title">Always reload settings</string>
+    <string name="settings_app_always_reload">If disabled, the device has to be restarted in order to apply changes. Might decrease lag if disabled. Restart reqired to re-enable</string>
     <string name="settings_app_info_title">About LockMod</string>
 
     <string name="about_author">Developed by \"MrWasdennnoch\"</string>

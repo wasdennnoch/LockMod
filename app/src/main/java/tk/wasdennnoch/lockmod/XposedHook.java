@@ -25,7 +25,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class XposedHook implements IXposedHookLoadPackage {
 
-    private static final boolean DEBUG = false;
+    private static boolean debug = false;
+    private static boolean reload_settings = true;
 
     private XSharedPreferences mPrefs = new XSharedPreferences(XposedHook.class.getPackage().getName());
 
@@ -35,19 +36,19 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static final String PACKAGE_SYSTEMUI = "com.android.systemui";
 
     private static final String CLASS_LOCK_PATTERN_VIEW = "com.android.internal.widget.LockPatternView";
-    //private static final String CLASS_LOCK_PATTERN_UTILS = "com.android.internal.widget.LockPatternUtils";
     private static final String CLASS_KEYGUARD_PATTERN_VIEW = "com.android.keyguard.KeyguardPatternView";
     private static final String CLASS_KEYGUARD_UNLOCK_PATTERN_LISTENER = CLASS_KEYGUARD_PATTERN_VIEW + "$UnlockPatternListener";
-    //private static final String CLASS_KEYGUARD_VIEW_MEDIATOR = "com.android.systemui.keyguard.KeyguardViewMediator";
 
     private XC_MethodHook.Unhook mLastSegmentAlphaUnhook;
+    private boolean mTimingHooked;
+    private boolean mClippingHooked;
+
+    //private static final String CLASS_LOCK_PATTERN_UTILS = "com.android.internal.widget.LockPatternUtils";
+    //private static final String CLASS_KEYGUARD_VIEW_MEDIATOR = "com.android.systemui.keyguard.KeyguardViewMediator";
     //private XC_MethodHook.Unhook mRandomDotAnimUnhook;
     //private XC_MethodHook.Unhook mKeguardMediatorUnhook1;
     //private XC_MethodHook.Unhook mKeguardMediatorUnhook2;
     //private XC_MethodHook.Unhook mKeguardMediatorUnhook3;
-    private boolean mTimingHooked;
-    private boolean mClippingHooked;
-
     //private Runnable mRandomDotAnimRunnable;
     //private List<Object> mRandomAnimatedCells = new ArrayList<>();
 
@@ -58,8 +59,6 @@ public class XposedHook implements IXposedHookLoadPackage {
             XposedHelpers.findAndHookMethod(CLASS_OWN, lpparam.classLoader, "isEnabled", XC_MethodReplacement.returnConstant(true));
 
         } else if (lpparam.packageName.equals(PACKAGE_SYSTEMUI)) {
-
-            mPrefs.reload();
 
             hookConstructor(lpparam.classLoader);
             hookOnFinishInflate(lpparam.classLoader);
@@ -73,6 +72,13 @@ public class XposedHook implements IXposedHookLoadPackage {
         XposedHelpers.findAndHookConstructor(CLASS_KEYGUARD_PATTERN_VIEW, classLoader, Context.class, AttributeSet.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
+                if (reload_settings)
+                    mPrefs.reload();
+
+                reload_settings = mPrefs.getBoolean("always_reload", true);
+                debug = mPrefs.getBoolean("debug_log", false);
+
                 Context context = (Context) param.args[0];
                 Object mAppearAnimationUtils = XposedHelpers.getObjectField(param.thisObject, "mAppearAnimationUtils");
                 Object mDisappearAnimationUtils = XposedHelpers.getObjectField(param.thisObject, "mDisappearAnimationUtils");
@@ -87,8 +93,6 @@ public class XposedHook implements IXposedHookLoadPackage {
         XposedHelpers.findAndHookMethod(CLASS_KEYGUARD_PATTERN_VIEW, classLoader, "onFinishInflate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-
-                mPrefs.reload();
 
                 final View mLockPatternView = (View) XposedHelpers.getObjectField(param.thisObject, "mLockPatternView");
                 Paint mPaint = (Paint) XposedHelpers.getObjectField(mLockPatternView, "mPaint");
@@ -333,7 +337,6 @@ public class XposedHook implements IXposedHookLoadPackage {
         }*/
 
 
-
     }
 
     private void log(String msg) {
@@ -341,7 +344,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     }
 
     private void logD(String msg) {
-        if (DEBUG) log("[DEBUG] " + msg);
+        if (debug) log("[DEBUG] " + msg);
     }
 
 

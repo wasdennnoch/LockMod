@@ -324,20 +324,19 @@ public class LockPatternView extends View {
 
     @SuppressWarnings("deprecation")
     public void initValues(SharedPreferences prefs) {
-        setRegularColor(prefs.getInt("regular_color", getResources().getColor(R.color.regular_color_default)));
-        setErrorColor(prefs.getInt("error_color", getResources().getColor(R.color.error_color_default)));
-        setSuccessColor(prefs.getInt("success_color", getResources().getColor(R.color.success_color_default)));
-        setDisableLastSegmentAlpha(prefs.getBoolean("disable_last_segment_alpha", false));
+        mRegularColor = prefs.getInt("regular_color", getResources().getColor(R.color.regular_color_default));
+        mRegularColor = prefs.getInt("error_color", getResources().getColor(R.color.error_color_default));
+        mSuccessColor = prefs.getInt("success_color", getResources().getColor(R.color.success_color_default));
+        mDisableLastSegmentAlpha = prefs.getBoolean("disable_last_segment_alpha", false);
 
         setLineWidth(prefs.getInt("line_width", getResources().getDimensionPixelSize(R.dimen.line_width_default)));
         setDotSize(prefs.getInt("dot_size", getResources().getDimensionPixelSize(R.dimen.dot_size_default)));
-        setDotSizeActivated(prefs.getInt("dot_size_activated", getResources().getDimensionPixelSize(R.dimen.dot_size_activated_default)));
+        mDotSizeActivated = prefs.getInt("dot_size_activated", getResources().getDimensionPixelSize(R.dimen.dot_size_activated_default));
 
-        // TODO quick and dirty - enhance this
         if (prefs.getBoolean("stroke_dots", false)) {
             setStrokeDots(true);
             int strokeWidth = prefs.getInt("stroke_dots_width", 6);
-            setDotStrokeWidth(strokeWidth);
+            mPaint.setStrokeWidth(strokeWidth);
             if (prefs.getBoolean("dash_dots", false)) {
                 PathEffect dash = new DashPathEffect(
                         new float[]{strokeWidth * prefs.getFloat("dash_dots_on_multiplier", 1),
@@ -379,23 +378,6 @@ public class LockPatternView extends View {
         invalidate();
     }
 
-
-    public void setRegularColor(int color) {
-        mRegularColor = color;
-    }
-
-    public void setErrorColor(int color) {
-        mErrorColor = color;
-    }
-
-    public void setSuccessColor(int color) {
-        mSuccessColor = color;
-    }
-
-    public void setDisableLastSegmentAlpha(boolean disable) {
-        mDisableLastSegmentAlpha = disable;
-    }
-
     public void setLineWidth(int lineWidth) {
         mPathWidth = lineWidth;
         mPathPaint.setStrokeWidth(lineWidth);
@@ -410,20 +392,12 @@ public class LockPatternView extends View {
         }
     }
 
-    public void setDotSizeActivated(int dotSizeActivated) {
-        mDotSizeActivated = dotSizeActivated;
-    }
-
     public void setStrokeDots(boolean strokeDots) {
         if (strokeDots) {
             mPaint.setStyle(Paint.Style.STROKE);
         } else {
             mPaint.setStyle(Paint.Style.FILL);
         }
-    }
-
-    public void setDotStrokeWidth(int strokeWidth) {
-        mPaint.setStrokeWidth(strokeWidth);
     }
 
     public void setShaderEnabled(boolean shaderEnabled) {
@@ -450,19 +424,6 @@ public class LockPatternView extends View {
     }
 
 
-    public Paint getPaint() {
-        return mPaint;
-    }
-
-    public Paint getPathPaint() {
-        return mPathPaint;
-    }
-
-
-    public CellState[][] getCellStates() {
-        return mCellStates;
-    }
-
     /**
      * Set the pattern size of the lockscreen
      *
@@ -482,6 +443,7 @@ public class LockPatternView extends View {
         mPatternDrawLookup = new boolean[size][size];
     }
 
+    @SuppressWarnings("unused")
     public byte getLockPatternSize() {
         return mPatternSize;
     }
