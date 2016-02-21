@@ -16,6 +16,7 @@ Repository: http://repo.xposed.info/module/tk.wasdennnoch.lockmod
 <img src="/Screenshots/Screenshot_2016-02-20-20-35-57.png" width="400">
 <img src="/Screenshots/Screenshot_2016-02-20-20-39-50.png" width="400">
 <img src="/Screenshots/Screenshot_2016-02-20-20-42-55.png" width="400">
-
+<br>
 (Older version of the app in the background, but same functionality)
+<br>
 <img src="/Screenshots/Screenshot_2016-01-03-00-08-35.png" width="400">
