@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- *
+ * Modifications (C) 2016 MrWasdennnoch@xda
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,9 +28,11 @@ import android.graphics.Color;
 import android.graphics.ComposePathEffect;
 import android.graphics.CornerPathEffect;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
@@ -52,7 +54,7 @@ import java.util.List;
  * Is also capable of displaying a static pattern in "in progress", "wrong" or
  * "correct" states.
  */
-public class LockPatternView extends View {
+public class LockPatternPreviewView extends View {
 
     // Aspect to use when rendering this view
     private static final int ASPECT_SQUARE = 0; // View will be the minimum of width/height
@@ -271,12 +273,12 @@ public class LockPatternView extends View {
         void onPatternDetected(List<Cell> pattern);
     }
 
-    public LockPatternView(Context context) {
+    public LockPatternPreviewView(Context context) {
         this(context, null);
     }
 
     @SuppressWarnings("deprecation")
-    public LockPatternView(Context context, AttributeSet attrs) {
+    public LockPatternPreviewView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mAspect = ASPECT_SQUARE;
@@ -325,7 +327,7 @@ public class LockPatternView extends View {
     @SuppressWarnings("deprecation")
     public void initValues(SharedPreferences prefs) {
         mRegularColor = prefs.getInt("regular_color", getResources().getColor(R.color.regular_color_default));
-        mRegularColor = prefs.getInt("error_color", getResources().getColor(R.color.error_color_default));
+        mErrorColor = prefs.getInt("error_color", getResources().getColor(R.color.error_color_default));
         mSuccessColor = prefs.getInt("success_color", getResources().getColor(R.color.success_color_default));
         mDisableLastSegmentAlpha = prefs.getBoolean("disable_last_segment_alpha", false);
 
@@ -350,6 +352,16 @@ public class LockPatternView extends View {
         } else {
             setStrokeDots(false);
         }
+        if (prefs.getBoolean("dash_line", false)) {
+            PathEffect dash = new DashPathEffect(
+                    new float[]{mPathWidth * prefs.getFloat("dash_line_on_multiplier", 1),
+                            mPathWidth * prefs.getFloat("dash_line_off_multiplier", 1)}
+                    , 0);
+            PathEffect effect = new ComposePathEffect(dash, new CornerPathEffect(mPathWidth));
+            mPathPaint.setPathEffect(effect);
+        } else {
+            mPathPaint.setPathEffect(null);
+        }
 
         if (prefs.getBoolean("blur_dot", false) || prefs.getBoolean("blur_line", false)) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -373,7 +385,7 @@ public class LockPatternView extends View {
             mPathPaint.setMaskFilter(null);
         }
 
-        setShaderEnabled(prefs.getBoolean("rainbow_shader", false));
+        setShaderEnabled(prefs.getBoolean("rainbow_shader", false), prefs.getString("rainbow_shader_type", ""));
 
         invalidate();
     }
@@ -393,30 +405,35 @@ public class LockPatternView extends View {
     }
 
     public void setStrokeDots(boolean strokeDots) {
-        if (strokeDots) {
-            mPaint.setStyle(Paint.Style.STROKE);
-        } else {
-            mPaint.setStyle(Paint.Style.FILL);
-        }
+        mPaint.setStyle(strokeDots ? Paint.Style.STROKE : Paint.Style.FILL);
     }
 
-    public void setShaderEnabled(boolean shaderEnabled) {
+    public void setShaderEnabled(boolean shaderEnabled, final String type) {
         if (shaderEnabled) {
-            Runnable r = new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     int[] colors = new int[]{0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000};
-                    Shader shader = new SweepGradient(getWidth() / 2, getHeight() / 2, colors, null);
+                    Shader shader;
+                    switch (type) {
+                        case "linear":
+                            shader = new LinearGradient(0, 0, 0, getHeight(), colors, null, Shader.TileMode.REPEAT);
+                            break;
+                        case "radial":
+                            shader = new RadialGradient(getWidth() / 2, getHeight() / 2, getWidth() / 2, colors, null, Shader.TileMode.REPEAT);
+                            break;
+                        case "sweep":
+                            shader = new SweepGradient(getWidth() / 2, getHeight() / 2, colors, null);
+                            break;
+                        default:
+                            shader = new LinearGradient(0, 0, 0, getHeight(), colors, null, Shader.TileMode.REPEAT);
+                            break;
+                    }
                     mPaint.setShader(shader);
                     mPathPaint.setShader(shader);
+                    invalidate();
                 }
-            };
-            // getWidth() and getHeight() return 0 when size isn't determined yet; cheap check
-            // if they are already set. If not, wait until they are set
-            if (mSquareWidth > 0)
-                r.run();
-            else
-                post(r);
+            });
         } else {
             mPaint.setShader(null);
             mPathPaint.setShader(null);

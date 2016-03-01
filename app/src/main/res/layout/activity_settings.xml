@@ -22,19 +22,10 @@
         android:layout_height="match_parent"
         android:layout_below="@id/not_enabled_warning">
 
-        <FrameLayout
-            android:id="@+id/fragment"
+        <ListView
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-        <tk.wasdennnoch.lockmod.LockPatternView
-            android:id="@+id/lockPatternView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/lock_pattern_bg"
-            android:padding="8dp"
-            android:visibility="invisible"/>
 
     </RelativeLayout>
 

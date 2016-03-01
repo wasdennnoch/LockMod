@@ -4,43 +4,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/settings_colors_title">
+        android:title="@string/header_colors">
 
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="true"
             hexValue="true"
             android:defaultValue="@color/regular_color_default"
             android:key="regular_color"
-            android:summary="@string/settings_colors_regular_color"
-            android:title="@string/settings_colors_regular_color_title"/>
+            android:summary="@string/pattern_colors_regular_color"
+            android:title="@string/pattern_colors_regular_color_title"/>
 
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="true"
             hexValue="true"
             android:defaultValue="@color/error_color_default"
             android:key="error_color"
-            android:summary="@string/settings_colors_error_color"
-            android:title="@string/settings_colors_error_color_title"/>
+            android:summary="@string/pattern_colors_error_color"
+            android:title="@string/pattern_colors_error_color_title"/>
 
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="true"
             hexValue="true"
             android:defaultValue="@color/success_color_default"
             android:key="success_color"
-            android:summary="@string/settings_colors_success_color"
-            android:title="@string/settings_colors_success_color_title"/>
+            android:summary="@string/pattern_colors_success_color"
+            android:title="@string/pattern_colors_success_color_title"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="disable_last_segment_alpha"
-            android:summary="@string/settings_colors_disable_last_segment_alpha"
-            android:title="@string/settings_colors_disable_last_segment_alpha_title"/>
+            android:summary="@string/pattern_colors_disable_last_segment_alpha"
+            android:title="@string/pattern_colors_disable_last_segment_alpha_title"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_dimensions_title">
+        android:title="@string/header_dimensions">
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -50,8 +50,8 @@
             monitorBoxUnit="px"
             android:defaultValue="3"
             android:key="line_width"
-            android:summary="@string/settings_dimensions_line_width"
-            android:title="@string/settings_dimensions_line_width_title"/>
+            android:summary="@string/pattern_dimensions_line_width"
+            android:title="@string/pattern_dimensions_line_width_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -61,8 +61,8 @@
             monitorBoxUnit="px"
             android:defaultValue="12"
             android:key="dot_size"
-            android:summary="@string/settings_dimensions_dot_size"
-            android:title="@string/settings_dimensions_dot_size_title"/>
+            android:summary="@string/pattern_dimensions_dot_size"
+            android:title="@string/pattern_dimensions_dot_size_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -72,20 +72,20 @@
             monitorBoxUnit="px"
             android:defaultValue="28"
             android:key="dot_size_activated"
-            android:summary="@string/settings_dimensions_dot_size_activated"
-            android:title="@string/settings_dimensions_dot_size_activated_title"/>
+            android:summary="@string/pattern_dimensions_dot_size_activated"
+            android:title="@string/pattern_dimensions_dot_size_activated_title"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_stroke_title">
+        android:title="@string/header_stroke">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="stroke_dots"
-            android:summary="@string/settings_stroke_stroke_dots"
-            android:title="@string/settings_stroke_stroke_dots_title"/>
+            android:summary="@string/pattern_stroke_dots"
+            android:title="@string/pattern_stroke_dots_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -96,13 +96,13 @@
             android:defaultValue="6"
             android:dependency="stroke_dots"
             android:key="stroke_dots_width"
-            android:title="@string/settings_stroke_stroke_width_title"/>
+            android:title="@string/pattern_stroke_dots_width_title"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:dependency="stroke_dots"
             android:key="dash_dots"
-            android:title="@string/settings_stroke_stroke_dash_title"/>
+            android:title="@string/pattern_stroke_dots_dash_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -114,7 +114,7 @@
             android:defaultValue="1"
             android:dependency="dash_dots"
             android:key="dash_dots_on_multiplier"
-            android:title="@string/settings_stroke_stroke_dash_multiplier_on"/>
+            android:title="@string/pattern_stroke_dots_dash_multiplier_on"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -126,22 +126,51 @@
             android:defaultValue="1"
             android:dependency="dash_dots"
             android:key="dash_dots_off_multiplier"
-            android:title="@string/settings_stroke_stroke_dash_multiplier_off"/>
+            android:title="@string/pattern_stroke_dots_dash_multiplier_off"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="dash_line"
+            android:title="@string/pattern_stroke_line_dash_title"/>
+
+        <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
+            factor="10"
+            interval="1"
+            maximum="50"
+            minimum="1"
+            monitorBoxEnabled="true"
+            monitorBoxUnit="x"
+            android:defaultValue="1"
+            android:dependency="dash_line"
+            android:key="dash_line_on_multiplier"
+            android:title="@string/pattern_stroke_line_dash_multiplier_on"/>
+
+        <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
+            factor="10"
+            interval="1"
+            maximum="50"
+            minimum="1"
+            monitorBoxEnabled="true"
+            monitorBoxUnit="x"
+            android:defaultValue="1"
+            android:dependency="dash_line"
+            android:key="dash_line_off_multiplier"
+            android:title="@string/pattern_stroke_line_dash_multiplier_off"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_blur_title">
+        android:title="@string/header_blur">
 
         <Preference
             android:selectable="false"
-            android:summary="@string/settings_blur_info"/>
+            android:summary="@string/pattern_blur_info"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="blur_dot"
-            android:title="@string/settings_blur_dots_title"/>
+            android:title="@string/pattern_blur_dots_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -152,20 +181,20 @@
             android:defaultValue="5"
             android:dependency="blur_dot"
             android:key="blur_dot_radius"
-            android:title="@string/settings_blur_dots_radius_title"/>
+            android:title="@string/pattern_blur_dots_radius_title"/>
 
         <ListPreference
             android:defaultValue="NORMAL"
             android:dependency="blur_dot"
-            android:entries="@array/settings_blur_mode_modes"
-            android:entryValues="@array/settings_blur_mode_modes_values"
+            android:entries="@array/pattern_blur_mode_modes"
+            android:entryValues="@array/pattern_blur_mode_modes_values"
             android:key="blur_dot_mode"
-            android:title="@string/settings_blur_dots_mode_title"/>
+            android:title="@string/pattern_blur_dots_mode_title"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="blur_line"
-            android:title="@string/settings_blur_line_title"/>
+            android:title="@string/pattern_blur_line_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -176,21 +205,21 @@
             android:defaultValue="5"
             android:dependency="blur_line"
             android:key="blur_line_radius"
-            android:title="@string/settings_blur_line_radius_title"/>
+            android:title="@string/pattern_blur_line_radius_title"/>
 
         <ListPreference
             android:defaultValue="NORMAL"
             android:dependency="blur_line"
-            android:entries="@array/settings_blur_mode_modes"
-            android:entryValues="@array/settings_blur_mode_modes_values"
+            android:entries="@array/pattern_blur_mode_modes"
+            android:entryValues="@array/pattern_blur_mode_modes_values"
             android:key="blur_line_mode"
-            android:title="@string/settings_blur_line_mode_title"/>
+            android:title="@string/pattern_blur_line_mode_title"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_timing_title">
+        android:title="@string/header_timing">
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="50"
@@ -200,8 +229,8 @@
             monitorBoxUnit="ms"
             android:defaultValue="2000"
             android:key="clear_timeout"
-            android:summary="@string/settings_timing_clear_timeout"
-            android:title="@string/settings_timing_clear_timeout_title"/>
+            android:summary="@string/pattern_timing_clear_timeout"
+            android:title="@string/pattern_timing_clear_timeout_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -211,8 +240,8 @@
             monitorBoxUnit="ms"
             android:defaultValue="220"
             android:key="appear_animation_duration"
-            android:summary="@string/settings_timing_appear_animation_duration"
-            android:title="@string/settings_timing_appear_animation_duration_title"/>
+            android:summary="@string/pattern_timing_appear_animation_duration"
+            android:title="@string/pattern_timing_appear_animation_duration_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -223,8 +252,8 @@
             monitorBoxUnit="x"
             android:defaultValue="1.5"
             android:key="appear_animation_start_translation"
-            android:summary="@string/settings_timing_appear_animation_start_translation"
-            android:title="@string/settings_timing_appear_animation_start_translation_title"/>
+            android:summary="@string/pattern_timing_appear_animation_start_translation"
+            android:title="@string/pattern_timing_appear_animation_start_translation_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -235,8 +264,16 @@
             monitorBoxUnit="x"
             android:defaultValue="2.0"
             android:key="appear_animation_delay_scale"
-            android:summary="@string/settings_timing_appear_animation_delay_scale"
-            android:title="@string/settings_timing_appear_animation_delay_scale_title"/>
+            android:summary="@string/pattern_timing_appear_animation_delay_scale"
+            android:title="@string/pattern_timing_appear_animation_delay_scale_title"/>
+
+        <ListPreference
+            android:defaultValue="linear_out_slow_in"
+            android:entries="@array/pattern_timing_interpolator_modes"
+            android:entryValues="@array/pattern_timing_interpolator_modes"
+            android:key="appear_animation_interpolator"
+            android:summary="@string/pattern_timing_appear_animation_interpolator"
+            android:title="@string/pattern_timing_appear_animation_interpolator_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -246,8 +283,8 @@
             monitorBoxUnit="ms"
             android:defaultValue="125"
             android:key="disappear_animation_duration"
-            android:summary="@string/settings_timing_disappear_animation_duration"
-            android:title="@string/settings_timing_disappear_animation_duration_title"/>
+            android:summary="@string/pattern_timing_disappear_animation_duration"
+            android:title="@string/pattern_timing_disappear_animation_duration_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -258,8 +295,8 @@
             monitorBoxUnit="x"
             android:defaultValue="1.2"
             android:key="disappear_animation_start_translation"
-            android:summary="@string/settings_timing_disappear_animation_start_translation"
-            android:title="@string/settings_timing_disappear_animation_start_translation_title"/>
+            android:summary="@string/pattern_timing_disappear_animation_start_translation"
+            android:title="@string/pattern_timing_disappear_animation_start_translation_title"/>
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarFloatPreference
             factor="10"
@@ -270,32 +307,54 @@
             monitorBoxUnit="x"
             android:defaultValue="0.8"
             android:key="disappear_animation_delay_scale"
-            android:summary="@string/settings_timing_disappear_animation_delay_scale"
-            android:title="@string/settings_timing_disappear_animation_delay_scale_title"/>
+            android:summary="@string/pattern_timing_disappear_animation_delay_scale"
+            android:title="@string/pattern_timing_disappear_animation_delay_scale_title"/>
+
+        <ListPreference
+            android:defaultValue="fast_out_linear_in"
+            android:entries="@array/pattern_timing_interpolator_modes"
+            android:entryValues="@array/pattern_timing_interpolator_modes"
+            android:key="disappear_animation_interpolator"
+            android:summary="@string/pattern_timing_disappear_animation_interpolator"
+            android:title="@string/pattern_timing_disappear_animation_interpolator_title"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_miscellaneous_title">
+        android:title="@string/header_rainbow_shader">
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="disable_clipping"
-            android:summary="@string/settings_miscellaneous_disable_clipping"
-            android:title="@string/settings_miscellaneous_disable_clipping_title"/>
-
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="rainbow_shader"
-            android:summary="@string/settings_miscellaneous_rainbow_shader"
-            android:title="@string/settings_miscellaneous_rainbow_shader_title"/>
+            android:summary="@string/pattern_rainbow_shader_activate"
+            android:title="@string/pattern_rainbow_shader_activate_title"/>
+
+        <ListPreference
+            android:defaultValue="linear"
+            android:dependency="rainbow_shader"
+            android:entries="@array/pattern_rainbow_shader_types"
+            android:entryValues="@array/pattern_rainbow_shader_types_values"
+            android:key="rainbow_shader_type"
+            android:title="@string/pattern_rainbow_shader_type_title"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/settings_app_title">
+        android:title="@string/header_miscellaneous">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="disable_clipping"
+            android:summary="@string/pattern_miscellaneous_disable_clipping"
+            android:title="@string/pattern_miscellaneous_disable_clipping_title"/>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/header_app">
 
         <com.ceco.lollipop.gravitybox.preference.SeekBarPreference
             interval="1"
@@ -304,34 +363,8 @@
             monitorBoxEnabled="true"
             android:defaultValue="3"
             android:key="preview_pattern_size"
-            android:summary="@string/settings_app_preview_pattern_size"
-            android:title="@string/settings_app_preview_pattern_size_title"/>
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="hide_launcher_icon"
-            android:summary="@string/settings_app_hide_launcher_icon"
-            android:title="@string/settings_app_hide_launcher_icon_title"/>
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="debug_log"
-            android:summary="@string/settings_app_debug_log"
-            android:title="@string/settings_app_debug_log_title"/>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="always_reload"
-            android:summary="@string/settings_app_always_reload"
-            android:title="@string/settings_app_always_reload_title"/>
-
-        <Preference
-            android:key="about"
-            android:title="@string/settings_app_info_title">
-            <intent
-                android:targetClass="tk.wasdennnoch.lockmod.AboutActivity"
-                android:targetPackage="tk.wasdennnoch.lockmod"/>
-        </Preference>
+            android:summary="@string/pattern_app_preview_pattern_size"
+            android:title="@string/pattern_app_preview_pattern_size_title"/>
 
     </PreferenceCategory>
 
@@ -339,7 +372,7 @@
     <!--<PreferenceCategory
         android:title="Experimental">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="random_activation_animation"
             android:summary="@string/settings_miscellaneous_random_activation_animation"

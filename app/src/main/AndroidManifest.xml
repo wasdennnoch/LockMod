@@ -22,28 +22,41 @@
             android:value="@string/app_desc"/>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
             </intent-filter>
         </activity>
 
         <activity-alias
             android:name=".SettingsAlias"
-            android:label="@string/app_name"
             android:enabled="true"
-            android:targetActivity=".SettingsActivity" >
+            android:label="@string/app_name"
+            android:targetActivity=".activities.SettingsActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
 
         <activity
-            android:name=".AboutActivity"
-            android:label="@string/about"/>
+            android:name=".activities.PatternViewSettingsActivity"
+            android:label="@string/activity_pattern_settings"/>
+
+        <activity
+            android:name=".activities.GeneralSettingsActivity"
+            android:label="@string/activity_general"/>
+
+        <activity
+            android:name=".activities.ExperimentalSettingsActivity"
+            android:label="@string/activity_experimental"/>
+
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/activity_about"/>
+
 
     </application>
 

@@ -1,4 +1,4 @@
-package tk.wasdennnoch.lockmod;
+package tk.wasdennnoch.lockmod.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import tk.wasdennnoch.lockmod.R;
 
 public class AboutActivity extends Activity {
 

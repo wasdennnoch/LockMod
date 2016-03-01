@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/header_app">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="hide_launcher_icon"
+            android:summary="@string/general_hide_launcher_icon"
+            android:title="@string/general_hide_launcher_icon_title"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="debug_log"
+            android:summary="@string/general_debug_log"
+            android:title="@string/general_debug_log_title"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="always_reload"
+            android:summary="@string/general_always_reload"
+            android:title="@string/general_always_reload_title"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

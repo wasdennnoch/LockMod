@@ -1,16 +1,17 @@
-package tk.wasdennnoch.lockmod;
+package tk.wasdennnoch.lockmod.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -19,17 +20,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ceco.lollipop.gravitybox.preference.SeekBarPreference;
 
+import java.io.File;
 import java.util.List;
 
-public class SettingsActivity extends Activity implements LockPatternView.OnPatternListener {
+import tk.wasdennnoch.lockmod.LockPatternPreviewView;
+import tk.wasdennnoch.lockmod.R;
 
-    private boolean mPreviewVisible = false;
-    private static LockPatternView mLockPatternView;
+public class PatternViewSettingsActivity extends Activity implements LockPatternPreviewView.OnPatternListener {
+
+    private static boolean mPreviewVisible = false;
+    private static LockPatternPreviewView mLockPatternView;
+    private static RelativeLayout mRoot;
     private View mFragment;
     private int mLockPatternHeight;
     private int mFragmentHeight;
@@ -41,23 +50,21 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_pattern_view_settings);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment, new SettingsFragment()).commit();
-        mLockPatternView = (LockPatternView) findViewById(R.id.lockPatternView);
+        //noinspection ConstantConditions
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mRoot = (RelativeLayout) findViewById(R.id.root);
         mFragment = findViewById(R.id.fragment);
+        mLockPatternView = (LockPatternPreviewView) findViewById(R.id.lockPatternView);
         mLockPatternView.setOnPatternListener(this);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            ((TextView) findViewById(R.id.not_enabled_warning)).setText(String.format(getString(R.string.wrong_version_warning), Build.VERSION.SDK_INT));
-        } else {
-            if (isEnabled()) {
-                findViewById(R.id.not_enabled_warning).setVisibility(View.GONE);
-            }
-        }
+        getFragmentManager().beginTransaction().replace(R.id.fragment, new Fragment()).commit();
+
 
         mLockPatternView.post(new Runnable() {
             @Override
@@ -69,9 +76,11 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
             @Override
             public void run() {
                 mFragmentHeight = mFragment.getHeight();
-                setLockViewState(mPreviewVisible);
-                //mLockPatternView.setVisibility(View.GONE);
-                //mLockPatternView.setY(mFragmentHeight);
+                mPreviewVisible = false;
+                if (!isLandscape()) {
+                    mLockPatternView.setVisibility(View.GONE);
+                    mLockPatternView.setY(mFragmentHeight);
+                }
             }
         });
     }
@@ -79,6 +88,14 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_settings, menu);
+        final Switch s = (Switch) menu.findItem(R.id.action_toggle).getActionView();
+        s.setChecked(mPrefs.getBoolean("active_pattern_tweaks", false));
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPrefs.edit().putBoolean("active_pattern_tweaks", s.isChecked()).apply();
+            }
+        });
         if (isLandscape())
             menu.findItem(R.id.action_preview_toggle).setVisible(false);
         return true;
@@ -123,6 +140,9 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                         .setView(v)
                         .show();
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -139,10 +159,6 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         }
     }
 
-    private boolean isLandscape() {
-        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
     private void setLockViewState(boolean show) {
         if (isLandscape())
             return;
@@ -155,6 +171,7 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                         @Override
                         public void onAnimationStart(Animator animation) {
                             mLockPatternView.setVisibility(View.VISIBLE);
+                            mLockPatternView.initValues(mPrefs);
                         }
 
                         @Override
@@ -181,6 +198,10 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         anim.start();
     }
 
+    private boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
     @Override
     public void onPatternStart() {
         mLockPatternView.removeCallbacks(mCancelPatternRunnable);
@@ -191,28 +212,24 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
     }
 
     @Override
-    public void onPatternCellAdded(List<LockPatternView.Cell> pattern) {
+    public void onPatternCellAdded(List<LockPatternPreviewView.Cell> pattern) {
     }
 
     @Override
-    public void onPatternDetected(List<LockPatternView.Cell> pattern) {
-        mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+    public void onPatternDetected(List<LockPatternPreviewView.Cell> pattern) {
+        mLockPatternView.setDisplayMode(LockPatternPreviewView.DisplayMode.Wrong);
         mLockPatternView.postDelayed(mCancelPatternRunnable, mPrefs.getInt("clear_timeout", 2000));
     }
 
-    // Will be hooked to return true
-    public boolean isEnabled() {
-        return false;
-    }
 
-
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class Fragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             //noinspection deprecation
-            getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
+            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
             mPrefs = getPreferenceManager().getSharedPreferences();
             if (!mPrefs.contains("line_width")) {
                 mPrefs.edit().putInt("line_width", getResources().getDimensionPixelSize(R.dimen.line_width_default)).apply();
@@ -223,10 +240,11 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
             if (!mPrefs.contains("dot_size_activated")) {
                 mPrefs.edit().putInt("dot_size_activated", getResources().getDimensionPixelSize(R.dimen.dot_size_activated_default)).apply();
             }
+            setClipping();
             mLockPatternView.setLockPatternSize((byte) mPrefs.getInt("preview_pattern_size", 3));
             mLockPatternView.initValues(mPrefs);
 
-            addPreferencesFromResource(R.xml.preferences);
+            addPreferencesFromResource(R.xml.preferences_pattern_view);
         }
 
         @Override
@@ -239,18 +257,18 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
                 case "disappear_animation_duration":
                 case "disappear_animation_start_translation":
                 case "disappear_animation_delay_scale":
-                case "disable_clipping":
                 case "preview_pattern_size":
-                case "debug_log":
-                case "always_reload":
-                case "about":
                     break;
                 case "hide_launcher_icon":
                     int mode = prefs.getBoolean("hide_launcher_icon", false) ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED : PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
                     getActivity().getPackageManager().setComponentEnabledSetting(new ComponentName(getActivity(), "tk.wasdennnoch.lockmod.SettingsAlias"), mode, PackageManager.DONT_KILL_APP);
                     break;
+                case "disable_clipping":
+                    setClipping();
+                    break;
                 default:
-                    mLockPatternView.initValues(prefs);
+                    if (mPreviewVisible)
+                        mLockPatternView.initValues(prefs);
                     break;
             }
         }
@@ -258,7 +276,7 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         @Override
         public void onResume() {
             super.onResume();
-            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+            mPrefs.registerOnSharedPreferenceChangeListener(this);
             if (mPrefs.getBoolean("secret", false))
                 ((SeekBarPreference) findPreference("preview_pattern_size")).setMaximum(20);
         }
@@ -266,7 +284,20 @@ public class SettingsActivity extends Activity implements LockPatternView.OnPatt
         @Override
         public void onPause() {
             super.onPause();
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+            mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+            File sharedPrefsDir = new File(getActivity().getFilesDir(), "../shared_prefs");
+            File sharedPrefsFile = new File(sharedPrefsDir, getPreferenceManager().getSharedPreferencesName() + ".xml");
+            if (sharedPrefsFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                sharedPrefsFile.setReadable(true, false);
+            }
+        }
+
+        private void setClipping() {
+            boolean clip = !mPrefs.getBoolean("disable_clipping", false); // Enable the deactivation
+            mRoot.setClipChildren(clip);
+            mRoot.setClipToPadding(clip);
+            mLockPatternView.setClipToOutline(clip);
         }
 
     }
