@@ -72,7 +72,7 @@ public class DevTweaks {
                     }
                 });
 
-                //XposedHelpers.callMethod(param.thisObject, "showDialog", "Title", "Message: onFinishInflate");
+                XposedHelpers.callMethod(param.thisObject, "showDialog", "Title", "Message: onFinishInflate");
 
 
             }

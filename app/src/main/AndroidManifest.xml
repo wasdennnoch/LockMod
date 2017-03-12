@@ -57,6 +57,11 @@
             android:name=".activities.AboutActivity"
             android:label="@string/activity_about"/>
 
+        <receiver android:name=".MyPackageReplacedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

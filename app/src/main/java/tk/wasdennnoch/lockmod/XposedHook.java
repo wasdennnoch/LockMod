@@ -1,9 +1,14 @@
 package tk.wasdennnoch.lockmod;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.IWindowManager;
 import android.view.View;
+import android.view.WindowManagerPolicy;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -24,25 +29,34 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static boolean debug = false;
     private static boolean reload_settings = true;
 
-    private XSharedPreferences mPrefs = new XSharedPreferences(XposedHook.class.getPackage().getName());
-
-    private static final String PACKAGE_OWN = "tk.wasdennnoch.lockmod";
-    private static final String CLASS_OWN = "tk.wasdennnoch.lockmod.activities.SettingsActivity";
-
-    private static final String PACKAGE_SYSTEMUI = "com.android.systemui";
+    private XSharedPreferences mPrefs = new XSharedPreferences("tk.wasdennnoch.lockmod");
 
     public static final String CLASS_LOCK_PATTERN_VIEW = "com.android.internal.widget.LockPatternView";
     public static final String CLASS_KEYGUARD_PATTERN_VIEW = "com.android.keyguard.KeyguardPatternView";
     public static final String CLASS_KEYGUARD_UNLOCK_PATTERN_LISTENER = CLASS_KEYGUARD_PATTERN_VIEW + "$UnlockPatternListener";
 
-    private static byte errorCount;
-    private static final byte TOTAL_COUNT = 8;
-
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (lpparam.packageName.equals(PACKAGE_OWN)) {
-            XposedHelpers.findAndHookMethod(CLASS_OWN, lpparam.classLoader, "isEnabled", XC_MethodReplacement.returnConstant(true));
-        } else if (lpparam.packageName.equals(PACKAGE_SYSTEMUI)) {
+        if (lpparam.packageName.equals("tk.wasdennnoch.lockmod")) {
+            XposedHelpers.findAndHookMethod("tk.wasdennnoch.lockmod.activities.SettingsActivity", lpparam.classLoader, "isEnabled", XC_MethodReplacement.returnConstant(true));
+        } else if (lpparam.packageName.equals("android")) {
+            if (Config.DEV) {
+                Class<?> classPhoneWindowManager = XposedHelpers.findClass(Config.M ? "com.android.server.policy.PhoneWindowManager" : "com.android.internal.policy.impl.PhoneWindowManager", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(classPhoneWindowManager, "init", Context.class, IWindowManager.class, WindowManagerPolicy.WindowManagerFuncs.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Object pwm = param.thisObject;
+                        Context c = (Context) XposedHelpers.getObjectField(pwm, "mContext");
+                        c.registerReceiver(new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                throw new RuntimeException("Shhhh... Sleep...");
+                            }
+                        }, new IntentFilter("reboot"));
+                    }
+                });
+            }
+        } else if (lpparam.packageName.equals("com.android.systemui")) {
 
             mPrefs.reload();
             if (mPrefs.getBoolean("active_pattern_tweaks", false)) {
@@ -50,8 +64,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 hookKeyguardPatternOnFinishInflate(lpparam.classLoader);
             }
             //noinspection ConstantConditions,ConstantIfStatement
-            if (false)
+            if (Config.DEV) {
                 DevTweaks.setDevInit(lpparam.classLoader);
+            }
 
         }
     }
@@ -114,14 +129,11 @@ public class XposedHook implements IXposedHookLoadPackage {
                 TimingTweaks.setTiming(mPrefs, classLoader, mLockPatternView, mCancelPatternRunnable);
                 PaintTweaks.setShader(mPrefs, mLockPatternView, mPaint, mPathPaint);
                 MiscTweaks.setMisc(mPrefs, classLoader);
-
-                logD("Executed " + (TOTAL_COUNT - errorCount) + " out of " + TOTAL_COUNT + " hooks (" + errorCount + " errors)");
             }
         });
     }
 
     public static void logE(String msg, Throwable t) {
-        errorCount++;
         log("[FATAL ERROR] " + msg);
         if (t != null)
             XposedBridge.log(t);
