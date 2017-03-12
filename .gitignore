@@ -20,3 +20,6 @@ local.properties
 .DS_Store
 /captures
 /app/app-release.apk
+ic_launcher.zip
+lock.png
+lock_white.png
