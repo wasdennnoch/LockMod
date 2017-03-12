@@ -35,7 +35,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     public static final String CLASS_KEYGUARD_PATTERN_VIEW = "com.android.keyguard.KeyguardPatternView";
     public static final String CLASS_KEYGUARD_UNLOCK_PATTERN_LISTENER = CLASS_KEYGUARD_PATTERN_VIEW + "$UnlockPatternListener";
 
-    public static byte errorCount;
+    private static byte errorCount;
     private static final byte TOTAL_COUNT = 8;
 
     @Override
@@ -49,7 +49,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 hookKeyguardPatternConstructor(lpparam.classLoader);
                 hookKeyguardPatternOnFinishInflate(lpparam.classLoader);
             }
-            DevTweaks.setDevInit(lpparam.classLoader);
+            //noinspection ConstantConditions,ConstantIfStatement
+            if (false)
+                DevTweaks.setDevInit(lpparam.classLoader);
 
         }
     }

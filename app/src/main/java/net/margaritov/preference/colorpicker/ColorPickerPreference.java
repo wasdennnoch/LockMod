@@ -37,8 +37,8 @@ import android.widget.LinearLayout;
  */
 public class ColorPickerPreference extends Preference implements Preference.OnPreferenceClickListener, ColorPickerDialog.OnColorChangedListener {
 
-    View mView;
-    ColorPickerDialog mDialog;
+    private View mView;
+    private ColorPickerDialog mDialog;
     private int mValue = Color.BLACK;
     private float mDensity = 0;
     private boolean mAlphaSliderEnabled = false;
@@ -130,7 +130,7 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
         Bitmap bm = Bitmap.createBitmap(d, d, Config.ARGB_8888);
         int w = bm.getWidth();
         int h = bm.getHeight();
-        int c = color;
+        int c;
         for (int i = 0; i < w; i++) {
             for (int j = i; j < h; j++) {
                 c = (i <= 1 || j <= 1 || i >= w - 2 || j >= h - 2) ? Color.GRAY : color;
@@ -153,8 +153,7 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
         setPreviewColor();
         try {
             getOnPreferenceChangeListener().onPreferenceChange(this, color);
-        } catch (NullPointerException e) {
-
+        } catch (NullPointerException ignore) {
         }
     }
 
@@ -163,7 +162,7 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
         return false;
     }
 
-    protected void showDialog(Bundle state) {
+    private void showDialog(Bundle state) {
         mDialog = new ColorPickerDialog(getContext(), mValue);
         mDialog.setOnColorChangedListener(this);
         if (mAlphaSliderEnabled) {
@@ -180,8 +179,6 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
 
     /**
      * Toggle Alpha Slider visibility (by default it's disabled)
-     *
-     * @param enable
      */
     public void setAlphaSliderEnabled(boolean enable) {
         mAlphaSliderEnabled = enable;
@@ -189,8 +186,6 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
 
     /**
      * Toggle Hex Value visibility (by default it's disabled)
-     *
-     * @param enable
      */
     public void setHexValueEnabled(boolean enable) {
         mHexValueEnabled = enable;
@@ -198,9 +193,6 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
 
     /**
      * For custom purposes. Not used by ColorPickerPreferrence
-     *
-     * @param color
-     * @author Unknown
      */
     public static String convertToARGB(int color) {
         String alpha = Integer.toHexString(Color.alpha(color));
@@ -230,8 +222,6 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
     /**
      * Method currently used by onGetDefaultValue method to
      * convert hex string provided in android:defaultValue to color integer.
-     *
-     * @param color
      * @return A string representing the hex value of color,
      * without the alpha value
      * @author Charles Rosaaen
@@ -258,10 +248,6 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
 
     /**
      * For custom purposes. Not used by ColorPickerPreferrence
-     *
-     * @param argb
-     * @throws NumberFormatException
-     * @author Unknown
      */
     public static int convertToColorInt(String argb) throws IllegalArgumentException {
 
@@ -300,9 +286,9 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
     private static class SavedState extends BaseSavedState {
         Bundle dialogBundle;
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
-            dialogBundle = source.readBundle();
+            dialogBundle = source.readBundle(getClass().getClassLoader());
         }
 
         @Override
@@ -311,7 +297,7 @@ public class ColorPickerPreference extends Preference implements Preference.OnPr
             dest.writeBundle(dialogBundle);
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 

@@ -22,7 +22,6 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -38,7 +37,6 @@ public class PatternViewSettingsActivity extends Activity implements LockPattern
 
     private static boolean mPreviewVisible = false;
     private static LockPatternPreviewView mLockPatternView;
-    private static RelativeLayout mRoot;
     private View mFragment;
     private int mLockPatternHeight;
     private int mFragmentHeight;
@@ -57,7 +55,6 @@ public class PatternViewSettingsActivity extends Activity implements LockPattern
         //noinspection ConstantConditions
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRoot = (RelativeLayout) findViewById(R.id.root);
         mFragment = findViewById(R.id.fragment);
         mLockPatternView = (LockPatternPreviewView) findViewById(R.id.lockPatternView);
         mLockPatternView.setOnPatternListener(this);
@@ -294,10 +291,7 @@ public class PatternViewSettingsActivity extends Activity implements LockPattern
         }
 
         private void setClipping() {
-            boolean clip = !mPrefs.getBoolean("disable_clipping", false); // Enable the deactivation
-            mRoot.setClipChildren(clip);
-            mRoot.setClipToPadding(clip);
-            mLockPatternView.setClipToOutline(clip);
+            mLockPatternView.setClipToOutline(!mPrefs.getBoolean("disable_clipping", false)); // Enable the deactivation
         }
 
     }

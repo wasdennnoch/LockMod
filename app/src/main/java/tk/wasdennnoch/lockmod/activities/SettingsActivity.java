@@ -59,7 +59,7 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemClic
 
     private class Adapter extends ArrayAdapter {
 
-        public Adapter(Context context, int resource, List<AdapterItem> objects) {
+        Adapter(Context context, int resource, List<AdapterItem> objects) {
             //noinspection unchecked
             super(context, resource, objects);
         }

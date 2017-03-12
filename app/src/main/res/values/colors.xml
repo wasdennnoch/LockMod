@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="color_accent">#C01827</color>
+
     <color name="not_enabled_color">#BB0000</color>
     <color name="not_enabled_bg">#000000</color>
     <color name="lock_pattern_bg">#222222</color>

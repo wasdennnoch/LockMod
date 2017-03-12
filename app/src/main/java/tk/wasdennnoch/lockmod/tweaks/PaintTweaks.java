@@ -114,6 +114,7 @@ public class PaintTweaks {
                         Shader.TileMode tileMode = Shader.TileMode.REPEAT;
                         int w = mLockPatternView.getWidth();
                         int h = mLockPatternView.getHeight();
+                        if (w <= 0 || h <= 0) return;
                         final Shader shader;
                         switch (prefs.getString("rainbow_shader_type", "")) {
                             default /* linear */:

@@ -233,6 +233,7 @@ public class ColorPickerView extends View {
 
         final RectF rect = mSatValRect;
 
+        //noinspection ConstantConditions
         if (BORDER_WIDTH_PX > 0) {
             mBorderPaint.setColor(mBorderColor);
             canvas.drawRect(mDrawingRect.left, mDrawingRect.top, rect.right + BORDER_WIDTH_PX, rect.bottom + BORDER_WIDTH_PX, mBorderPaint);
@@ -266,6 +267,7 @@ public class ColorPickerView extends View {
 
         final RectF rect = mHueRect;
 
+        //noinspection ConstantConditions
         if (BORDER_WIDTH_PX > 0) {
             mBorderPaint.setColor(mBorderColor);
             canvas.drawRect(rect.left - BORDER_WIDTH_PX,
@@ -303,6 +305,7 @@ public class ColorPickerView extends View {
 
         final RectF rect = mAlphaRect;
 
+        //noinspection ConstantConditions
         if (BORDER_WIDTH_PX > 0) {
             mBorderPaint.setColor(mBorderColor);
             canvas.drawRect(rect.left - BORDER_WIDTH_PX,
@@ -786,8 +789,6 @@ public class ColorPickerView extends View {
     /**
      * Set a OnColorChangedListener to get notified when the color
      * selected by the user has changed.
-     *
-     * @param listener
      */
     public void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
@@ -795,8 +796,6 @@ public class ColorPickerView extends View {
 
     /**
      * Set the color of the border surrounding all panels.
-     *
-     * @param color
      */
     public void setBorderColor(int color) {
         mBorderColor = color;
@@ -871,8 +870,6 @@ public class ColorPickerView extends View {
     /**
      * Set if the user is allowed to adjust the alpha panel. Default is false.
      * If it is set to false no alpha will be set.
-     *
-     * @param visible
      */
     public void setAlphaSliderVisible(boolean visible) {
 
@@ -936,8 +933,6 @@ public class ColorPickerView extends View {
      * Get the current value of the text
      * that will be shown in the alpha
      * slider.
-     *
-     * @return
      */
     public String getAlphaSliderText() {
         return mAlphaSliderText;
