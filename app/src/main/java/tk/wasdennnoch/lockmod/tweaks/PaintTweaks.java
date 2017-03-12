@@ -137,12 +137,16 @@ public class PaintTweaks {
             }
             XposedHook.logD("Executed setShader");
         } catch (Throwable t) {
-            XposedHook.logE("Error execuing setShader", t);
+            XposedHook.logE("Error executing setShader", t);
         }
 
     }
 
     private static void disableHWAcceleration(View mLockPatternView) {
+        // This disables HW acceleration for all views. Sadly this is necessary
+        // to not lead the SystemUI into a crash loop because of a ClassCastException
+        // because the LockPatternView is stupid.
+        // TODO find a way to not completely disable HW acceleration for everything
         if (!mDisableHWAccelerationHooked) {
             XposedHelpers.findAndHookMethod(mLockPatternView.getClass().getSuperclass(), "isHardwareAccelerated", new XC_MethodHook() {
                 @Override
