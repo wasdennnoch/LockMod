@@ -1,4 +1,4 @@
-package tk.wasdennnoch.lockmod.tweaks;
+package tk.wasdennnoch.lockmod.tweaks.pattern;
 
 import android.graphics.Paint;
 import android.os.Build;

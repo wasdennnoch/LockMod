@@ -4,7 +4,8 @@ import android.os.Build;
 
 public class Config {
 
-    public static final boolean DEV = false;
+    @SuppressWarnings("PointlessBooleanExpression")
+    public static final boolean DEV = true && BuildConfig.DEBUG;
     public static final boolean M = Build.VERSION.SDK_INT >= 23;
 
 }

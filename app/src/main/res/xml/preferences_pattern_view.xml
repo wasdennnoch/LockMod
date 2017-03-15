@@ -267,7 +267,7 @@
             android:summary="@string/pattern_timing_appear_animation_delay_scale"
             android:title="@string/pattern_timing_appear_animation_delay_scale_title"/>
 
-        <ListPreference
+        <tk.wasdennnoch.lockmod.misc.prefs.DefaultListPreference
             android:defaultValue="linear_out_slow_in"
             android:entries="@array/pattern_timing_interpolator_modes"
             android:entryValues="@array/pattern_timing_interpolator_modes"
@@ -310,7 +310,7 @@
             android:summary="@string/pattern_timing_disappear_animation_delay_scale"
             android:title="@string/pattern_timing_disappear_animation_delay_scale_title"/>
 
-        <ListPreference
+        <tk.wasdennnoch.lockmod.misc.prefs.DefaultListPreference
             android:defaultValue="fast_out_linear_in"
             android:entries="@array/pattern_timing_interpolator_modes"
             android:entryValues="@array/pattern_timing_interpolator_modes"

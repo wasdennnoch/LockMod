@@ -1,10 +1,11 @@
-package tk.wasdennnoch.lockmod.tweaks;
+package tk.wasdennnoch.lockmod.tweaks.pattern;
 
 import android.graphics.BlurMaskFilter;
 import android.graphics.ComposePathEffect;
 import android.graphics.CornerPathEffect;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PathEffect;
 import android.graphics.RadialGradient;
@@ -111,22 +112,10 @@ public class PaintTweaks {
 
                         // Shaders have to be initiated here because we need to wait until the view is laid out to fetch the size
 
-                        Shader.TileMode tileMode = Shader.TileMode.REPEAT;
                         int w = mLockPatternView.getWidth();
                         int h = mLockPatternView.getHeight();
                         if (w <= 0 || h <= 0) return;
-                        final Shader shader;
-                        switch (prefs.getString("rainbow_shader_type", "")) {
-                            default /* linear */:
-                                shader = new LinearGradient(0, 0, 0, h, colors, null, tileMode);
-                                break;
-                            case "radial":
-                                shader = new RadialGradient(w / 2, h / 2, w / 2, colors, null, tileMode);
-                                break;
-                            case "sweep":
-                                shader = new SweepGradient(w / 2, h / 2, colors, null);
-                                break;
-                        }
+                        final Shader shader = generteShader(prefs, "rainbow_shader_type", w, h, colors, 190);
 
                         mPaint.setShader(shader);
                         mPathPaint.setShader(shader);
@@ -140,6 +129,26 @@ public class PaintTweaks {
             XposedHook.logE("Error executing setShader", t);
         }
 
+    }
+
+    private static Shader generteShader(XSharedPreferences prefs, String prefName, int width, int height, int[] colors, int rotation) {
+        Shader.TileMode tileMode = Shader.TileMode.REPEAT;
+        final Shader shader;
+        switch (prefs.getString(prefName, "")) {
+            default /* linear */:
+                shader = new LinearGradient(0, 0, width, height, colors, null, tileMode);
+                break;
+            case "radial":
+                shader = new RadialGradient(width / 2, width / 2, width / 2, colors, null, tileMode);
+                break;
+            case "sweep":
+                shader = new SweepGradient(width / 2, height / 2, colors, null);
+                break;
+        }
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotation);
+        shader.setLocalMatrix(matrix);
+        return shader;
     }
 
     private static void disableHWAcceleration(View mLockPatternView) {

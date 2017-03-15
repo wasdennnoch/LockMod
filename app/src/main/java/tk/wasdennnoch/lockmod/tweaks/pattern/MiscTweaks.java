@@ -1,4 +1,4 @@
-package tk.wasdennnoch.lockmod.tweaks;
+package tk.wasdennnoch.lockmod.tweaks.pattern;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
