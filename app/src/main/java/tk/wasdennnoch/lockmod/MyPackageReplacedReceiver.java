@@ -5,17 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
+import tk.wasdennnoch.lockmod.utils.ConfigUtils;
+
 public class MyPackageReplacedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        if (Config.DEV) {
+        if (ConfigUtils.DEV) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     context.sendBroadcast(new Intent("reboot").setPackage("android"));
                 }
-            }, 1000);
+            }, 2500);
         }
     }
 

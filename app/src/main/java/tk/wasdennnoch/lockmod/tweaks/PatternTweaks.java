@@ -1,13 +1,11 @@
 package tk.wasdennnoch.lockmod.tweaks;
 
-
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.lockmod.XposedHook;
 import tk.wasdennnoch.lockmod.tweaks.pattern.ColorTweaks;
@@ -15,21 +13,19 @@ import tk.wasdennnoch.lockmod.tweaks.pattern.DimensionTweaks;
 import tk.wasdennnoch.lockmod.tweaks.pattern.MiscTweaks;
 import tk.wasdennnoch.lockmod.tweaks.pattern.PaintTweaks;
 import tk.wasdennnoch.lockmod.tweaks.pattern.TimingTweaks;
+import tk.wasdennnoch.lockmod.utils.ConfigUtils;
 
 
 public class PatternTweaks {
 
-    public static void hookKeyguardPatternConstructor(ClassLoader classLoader, final XSharedPreferences mPrefs) {
+    public static void hookKeyguardPatternConstructor(ClassLoader classLoader) {
         XposedHelpers.findAndHookConstructor(XposedHook.CLASS_KEYGUARD_PATTERN_VIEW, classLoader, Context.class, AttributeSet.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (XposedHook.reload_settings)
-                    mPrefs.reload(); // TODO move to general lockscreen init
 
-                XposedHook.logD("KeyguardPatternView constructor afterHookedMethod");
-                XposedHook.reload_settings = mPrefs.getBoolean("always_reload", true);
-                XposedHook.debug = mPrefs.getBoolean("debug_log", false);
-                XposedHook.logD("Debugging enabled");
+                XposedHook.logD("PatternTweaks", "KeyguardPatternView constructor afterHookedMethod");
+                XposedHook.reload_settings = ConfigUtils.getBoolean("always_reload", true);
+                XposedHook.debug = ConfigUtils.getBoolean("debug_log", false);
 
                 Context context;
                 Object mAppearAnimationUtils;
@@ -39,20 +35,20 @@ public class PatternTweaks {
                     mAppearAnimationUtils = XposedHelpers.getObjectField(param.thisObject, "mAppearAnimationUtils");
                     mDisappearAnimationUtils = XposedHelpers.getObjectField(param.thisObject, "mDisappearAnimationUtils");
                 } catch (Throwable t) {
-                    XposedHook.logE("Error fetching objects in constructor of KeyguardPatternView", t);
+                    XposedHook.logE("PatternTweaks", "Error fetching objects in constructor of KeyguardPatternView", t);
                     return;
                 }
 
-                TimingTweaks.setTimingFromConstructor(mPrefs, context, mAppearAnimationUtils, mDisappearAnimationUtils);
+                TimingTweaks.setTimingFromConstructor(context, mAppearAnimationUtils, mDisappearAnimationUtils);
             }
         });
     }
 
-    public static void hookKeyguardPatternOnFinishInflate(final ClassLoader classLoader, final XSharedPreferences mPrefs) {
+    public static void hookKeyguardPatternOnFinishInflate(final ClassLoader classLoader) {
         XposedHelpers.findAndHookMethod(XposedHook.CLASS_KEYGUARD_PATTERN_VIEW, classLoader, "onFinishInflate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-                XposedHook.logD("KeyguardPatternView onFinishInflate afterHookedMethod");
+                XposedHook.logD("PatternTweaks", "KeyguardPatternView onFinishInflate afterHookedMethod");
 
                 final View mLockPatternView;
                 Paint mPaint;
@@ -66,17 +62,17 @@ public class PatternTweaks {
                     mCellStates = (Object[][]) XposedHelpers.getObjectField(mLockPatternView, "mCellStates");
                     mCancelPatternRunnable = (Runnable) XposedHelpers.getObjectField(param.thisObject, "mCancelPatternRunnable");
                 } catch (Throwable t) {
-                    XposedHook.logE("Error fetching objects in onFinishInflate in KeyguardPaternView", t);
+                    XposedHook.logE("PatternTweaks", "Error fetching objects in onFinishInflate in KeyguardPaternView", t);
                     return;
                 }
 
-                ColorTweaks.setColors(mPrefs, classLoader, mLockPatternView);
-                DimensionTweaks.setDimensions(mPrefs, mLockPatternView, mCellStates, mPathPaint);
-                PaintTweaks.setStroke(mPrefs, mPaint, mPathPaint);
-                PaintTweaks.setBlurring(mPrefs, mLockPatternView, mPaint, mPathPaint);
-                TimingTweaks.setTiming(mPrefs, classLoader, mLockPatternView, mCancelPatternRunnable);
-                PaintTweaks.setShader(mPrefs, mLockPatternView, mPaint, mPathPaint);
-                MiscTweaks.setMisc(mPrefs, classLoader);
+                ColorTweaks.setColors(classLoader, mLockPatternView);
+                DimensionTweaks.setDimensions(mLockPatternView, mCellStates, mPathPaint);
+                PaintTweaks.setStroke(mPaint, mPathPaint);
+                PaintTweaks.setBlurring(mLockPatternView, mPaint, mPathPaint);
+                TimingTweaks.setTiming(classLoader, mLockPatternView, mCancelPatternRunnable);
+                PaintTweaks.setShader(mLockPatternView, mPaint, mPathPaint);
+                MiscTweaks.setMisc(classLoader);
             }
         });
     }

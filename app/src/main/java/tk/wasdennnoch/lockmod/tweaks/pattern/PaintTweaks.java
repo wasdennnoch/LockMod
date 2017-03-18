@@ -15,78 +15,78 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.lockmod.XposedHook;
+import tk.wasdennnoch.lockmod.utils.ConfigUtils;
 
 public class PaintTweaks {
 
     private static boolean mDisableHWAccelerationHooked;
     private static boolean mDisableHWAcceleration;
 
-    public static void setStroke(XSharedPreferences prefs, Paint mPaint, Paint mPathPaint) {
+    public static void setStroke(Paint mPaint, Paint mPathPaint) {
 
         try {
-            if (prefs.getBoolean("stroke_dots", false)) {
-                int strokeWidth = prefs.getInt("stroke_dots_width", 6);
+            if (ConfigUtils.getBoolean("stroke_dots", false)) {
+                int strokeWidth = ConfigUtils.getInt("stroke_dots_width", 6);
                 mPaint.setStyle(Paint.Style.STROKE);
                 mPaint.setStrokeWidth(strokeWidth);
-                if (prefs.getBoolean("dash_dots", false)) {
+                if (ConfigUtils.getBoolean("dash_dots", false)) {
                     PathEffect dash = new DashPathEffect(
-                            new float[]{strokeWidth * prefs.getFloat("dash_dots_on_multiplier", 1),
-                                    strokeWidth * prefs.getFloat("dash_dots_off_multiplier", 1)}
+                            new float[]{strokeWidth * ConfigUtils.getFloat("dash_dots_on_multiplier", 1),
+                                    strokeWidth * ConfigUtils.getFloat("dash_dots_off_multiplier", 1)}
                             , 0);
                     PathEffect effect = new ComposePathEffect(dash, new CornerPathEffect(strokeWidth));
                     mPaint.setPathEffect(effect);
                 }
             }
-            int lineWidth = prefs.getInt("line_width", 6);
-            if (prefs.getBoolean("dash_line", false)) {
+            int lineWidth = ConfigUtils.getInt("line_width", 6);
+            if (ConfigUtils.getBoolean("dash_line", false)) {
                 PathEffect dash = new DashPathEffect(
-                        new float[]{lineWidth * prefs.getFloat("dash_line_on_multiplier", 1),
-                                lineWidth * prefs.getFloat("dash_line_off_multiplier", 1)}
+                        new float[]{lineWidth * ConfigUtils.getFloat("dash_line_on_multiplier", 1),
+                                lineWidth * ConfigUtils.getFloat("dash_line_off_multiplier", 1)}
                         , 0);
                 PathEffect effect = new ComposePathEffect(dash, new CornerPathEffect(lineWidth));
                 mPathPaint.setPathEffect(effect);
             }
-            XposedHook.logD("Executed setStroke");
+            XposedHook.logD("PaintTweaks", "Executed setStroke");
         } catch (Throwable t) {
-            XposedHook.logE("Error executing setStroke", t);
+            XposedHook.logE("PaintTweaks", "Error executing setStroke", t);
         }
 
     }
 
-    public static void setBlurring(XSharedPreferences prefs, View mLockPatternView, Paint mPaint, Paint mPathPaint) {
+    public static void setBlurring(View mLockPatternView, Paint mPaint, Paint mPathPaint) {
 
         try {
-            if (prefs.getBoolean("blur_dot", false)) {
+            if (ConfigUtils.getBoolean("blur_dot", false)) {
                 mDisableHWAcceleration = true;
-                BlurMaskFilter blurMaskFilter = new BlurMaskFilter(prefs.getInt("blur_dot_radius", 5),
-                        BlurMaskFilter.Blur.valueOf(prefs.getString("blur_dot_mode", "NORMAL")));
+                BlurMaskFilter blurMaskFilter = new BlurMaskFilter(ConfigUtils.getInt("blur_dot_radius", 5),
+                        BlurMaskFilter.Blur.valueOf(ConfigUtils.getString("blur_dot_mode", "NORMAL")));
                 mPaint.setMaskFilter(blurMaskFilter);
             } else {
                 mDisableHWAcceleration = false;
             }
-            if (prefs.getBoolean("blur_line", false)) {
+            if (ConfigUtils.getBoolean("blur_line", false)) {
                 mDisableHWAcceleration = true;
-                BlurMaskFilter blurMaskFilter = new BlurMaskFilter(prefs.getInt("blur_line_radius", 5),
-                        BlurMaskFilter.Blur.valueOf(prefs.getString("blur_line_mode", "NORMAL")));
+                BlurMaskFilter blurMaskFilter = new BlurMaskFilter(ConfigUtils.getInt("blur_line_radius", 5),
+                        BlurMaskFilter.Blur.valueOf(ConfigUtils.getString("blur_line_mode", "NORMAL")));
                 mPathPaint.setMaskFilter(blurMaskFilter);
             } else {
                 mDisableHWAcceleration = false;
             }
             disableHWAcceleration(mLockPatternView);
-            XposedHook.logD("Executed setBlurring");
+            XposedHook.logD("PaintTweaks", "Executed setBlurring");
         } catch (Throwable t) {
-            XposedHook.logE("Error executing setBlurring", t);
+            XposedHook.logE("PaintTweaks", "Error executing setBlurring", t);
         }
 
     }
 
-    public static void setShader(final XSharedPreferences prefs, final View mLockPatternView, final Paint mPaint, final Paint mPathPaint) {
+    public static void setShader(final View mLockPatternView, final Paint mPaint, final Paint mPathPaint) {
 
         try {
-            if (prefs.getBoolean("rainbow_shader", false)) {
+            if (ConfigUtils.getBoolean("rainbow_shader", false)) {
 
                 final int[] colors = new int[]{0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000};
 
@@ -115,7 +115,7 @@ public class PaintTweaks {
                         int w = mLockPatternView.getWidth();
                         int h = mLockPatternView.getHeight();
                         if (w <= 0 || h <= 0) return;
-                        final Shader shader = generteShader(prefs, "rainbow_shader_type", w, h, colors, 190);
+                        final Shader shader = generteShader("rainbow_shader_type", w, h, colors, 190);
 
                         mPaint.setShader(shader);
                         mPathPaint.setShader(shader);
@@ -124,17 +124,17 @@ public class PaintTweaks {
 
 
             }
-            XposedHook.logD("Executed setShader");
+            XposedHook.logD("PaintTweaks", "Executed setShader");
         } catch (Throwable t) {
-            XposedHook.logE("Error executing setShader", t);
+            XposedHook.logE("PaintTweaks", "Error executing setShader", t);
         }
 
     }
 
-    private static Shader generteShader(XSharedPreferences prefs, String prefName, int width, int height, int[] colors, int rotation) {
+    private static Shader generteShader(String prefName, int width, int height, int[] colors, int rotation) {
         Shader.TileMode tileMode = Shader.TileMode.REPEAT;
         final Shader shader;
-        switch (prefs.getString(prefName, "")) {
+        switch (ConfigUtils.getString(prefName, "")) {
             default /* linear */:
                 shader = new LinearGradient(0, 0, width, height, colors, null, tileMode);
                 break;

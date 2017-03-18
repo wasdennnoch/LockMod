@@ -57,6 +57,12 @@
             android:name=".activities.AboutActivity"
             android:label="@string/activity_about"/>
 
+        <provider
+            android:name=".PreferenceProvider"
+            android:authorities="tk.wasdennnoch.lockmod.PREFERENCES"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider"/>
+
         <receiver android:name=".MyPackageReplacedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>

@@ -12,8 +12,8 @@ import android.widget.ViewFlipper;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import tk.wasdennnoch.lockmod.Config;
 import tk.wasdennnoch.lockmod.XposedHook;
+import tk.wasdennnoch.lockmod.utils.ConfigUtils;
 
 public class DevTweaks {
 
@@ -27,21 +27,21 @@ public class DevTweaks {
         XposedBridge.hookAllConstructors(KeyguardSecurityContainer, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer constructor");
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer constructor");
             }
         });
 
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "showSecurityScreen", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer showSecurityScreen; param 0: "+param.args[0].toString() +" -/- "+ param.thisObject.getClass().getName());
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer showSecurityScreen; param 0: "+param.args[0].toString() +" -/- "+ param.thisObject.getClass().getName());
             }
         });
 
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "getSecurityView", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer getSecurityView: param 0: "+param.args[0].toString()+" -/- "+param.args[0].getClass().getName());
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer getSecurityView: param 0: "+param.args[0].toString()+" -/- "+param.args[0].getClass().getName());
             }
             @Override
              protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -53,12 +53,12 @@ public class DevTweaks {
                             v.setBackgroundColor(0x22ff0000);
                             v.getLayoutParams().height += 400;
                             v.requestLayout();
-                            XposedHook.logI("KeyguardSecurityContainer getSecurityView: post: executed");
+                            XposedHook.logI("DevTweaks", "KeyguardSecurityContainer getSecurityView: post: executed");
                         }
                     });
-                    XposedHook.logI("KeyguardSecurityContainer getSecurityView: result: " + v.getClass().getName());
+                    XposedHook.logI("DevTweaks", "KeyguardSecurityContainer getSecurityView: result: " + v.getClass().getName());
                 } else {
-                    XposedHook.logI("KeyguardSecurityContainer getSecurityView: result == null");
+                    XposedHook.logI("DevTweaks", "KeyguardSecurityContainer getSecurityView: result == null");
                 }
             }
         });
@@ -68,14 +68,14 @@ public class DevTweaks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
                 ViewFlipper mSecurityViewFlipper = (ViewFlipper) XposedHelpers.getObjectField(param.thisObject, "mSecurityViewFlipper");
-                XposedHook.logI("KeyguardSecurityContainer onFinishInflate, mSecurityViewFlipper class: "+mSecurityViewFlipper.getClass().getName());
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer onFinishInflate, mSecurityViewFlipper class: "+mSecurityViewFlipper.getClass().getName());
 
 
                 final View v = (View) param.thisObject;
                 v.post(new Runnable() {
                     @Override
                     public void run() {
-                        XposedHook.logI("KeyguardSecurityContainer: post(): getHeight: "+v.getHeight()+", getWidth: "+v.getWidth());
+                        XposedHook.logI("DevTweaks", "KeyguardSecurityContainer: post(): getHeight: "+v.getHeight()+", getWidth: "+v.getWidth());
                     }
                 });
 
@@ -88,14 +88,14 @@ public class DevTweaks {
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "showBouncer", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer showBouncer");
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer showBouncer");
             }
         });
 
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "hideBouncer", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer hideBouncer");
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer hideBouncer");
             }
         });
 
@@ -103,14 +103,14 @@ public class DevTweaks {
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "startAppearAnimation", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer startAppearAnimation");
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer startAppearAnimation");
             }
         });
 
         XposedBridge.hookAllMethods(KeyguardSecurityContainer, "startDisappearAnimation", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHook.logI("KeyguardSecurityContainer startDisappearAnimation");
+                XposedHook.logI("DevTweaks", "KeyguardSecurityContainer startDisappearAnimation");
             }
         });
 
@@ -119,7 +119,7 @@ public class DevTweaks {
 
 
     public static void devInitAndroid(ClassLoader classLoader) {
-        Class<?> classPhoneWindowManager = XposedHelpers.findClass(Config.M ? "com.android.server.policy.PhoneWindowManager" : "com.android.internal.policy.impl.PhoneWindowManager", classLoader);
+        Class<?> classPhoneWindowManager = XposedHelpers.findClass(ConfigUtils.M ? "com.android.server.policy.PhoneWindowManager" : "com.android.internal.policy.impl.PhoneWindowManager", classLoader);
         XposedHelpers.findAndHookMethod(classPhoneWindowManager, "init", Context.class, IWindowManager.class, WindowManagerPolicy.WindowManagerFuncs.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {

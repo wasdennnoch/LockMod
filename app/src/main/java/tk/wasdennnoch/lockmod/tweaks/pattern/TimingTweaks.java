@@ -8,15 +8,15 @@ import android.view.animation.Interpolator;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.lockmod.XposedHook;
+import tk.wasdennnoch.lockmod.utils.ConfigUtils;
 
 public class TimingTweaks {
 
     private static boolean mTimingHooked;
 
-    public static void setTiming(final XSharedPreferences prefs, ClassLoader classLoader, final View mLockPatternView, final Runnable mCancelPatternRunnable) {
+    public static void setTiming(ClassLoader classLoader, final View mLockPatternView, final Runnable mCancelPatternRunnable) {
 
         try {
             if (!mTimingHooked) {
@@ -24,41 +24,41 @@ public class TimingTweaks {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         mLockPatternView.removeCallbacks(mCancelPatternRunnable);
-                        mLockPatternView.postDelayed(mCancelPatternRunnable, prefs.getInt("clear_timeout", 2000));
-                        XposedHook.logD("onPatternDetected afterHookedMethod");
+                        mLockPatternView.postDelayed(mCancelPatternRunnable, ConfigUtils.getInt("clear_timeout", 2000));
+                        XposedHook.logD("TimingTweaks", "onPatternDetected afterHookedMethod");
                     }
                 });
                 mTimingHooked = true;
             }
-            XposedHook.logD("Executed setTiming");
+            XposedHook.logD("TimingTweaks", "Executed setTiming");
         } catch (Throwable t) {
-            XposedHook.logE("Error executing setTiming", t);
+            XposedHook.logE("TimingTweaks", "Error executing setTiming", t);
         }
 
     }
 
-    public static void setTimingFromConstructor(XSharedPreferences prefs, Context context, Object mAppearAnimationUtils, Object mDisappearAnimationUtils) {
+    public static void setTimingFromConstructor(Context context, Object mAppearAnimationUtils, Object mDisappearAnimationUtils) {
 
         try {
-            XposedHelpers.setLongField(mAppearAnimationUtils, "mDuration", prefs.getInt("appear_animation_duration", 220));
-            XposedHelpers.setLongField(mDisappearAnimationUtils, "mDuration", prefs.getInt("disappear_animation_duration", 125));
+            XposedHelpers.setLongField(mAppearAnimationUtils, "mDuration", ConfigUtils.getInt("appear_animation_duration", 220));
+            XposedHelpers.setLongField(mDisappearAnimationUtils, "mDuration", ConfigUtils.getInt("disappear_animation_duration", 125));
 
             XposedHelpers.setFloatField(mAppearAnimationUtils, "mStartTranslation",
-                    (32 * context.getResources().getDisplayMetrics().density) * prefs.getFloat("appear_animation_start_translation", 1.5f));
+                    (32 * context.getResources().getDisplayMetrics().density) * ConfigUtils.getFloat("appear_animation_start_translation", 1.5f));
             XposedHelpers.setFloatField(mDisappearAnimationUtils, "mStartTranslation",
-                    (32 * context.getResources().getDisplayMetrics().density) * prefs.getFloat("disappear_animation_start_translation", 1.2f));
+                    (32 * context.getResources().getDisplayMetrics().density) * ConfigUtils.getFloat("disappear_animation_start_translation", 1.2f));
 
-            XposedHelpers.setFloatField(mAppearAnimationUtils, "mDelayScale", prefs.getFloat("appear_animation_delay_scale", 2.0f));
-            XposedHelpers.setFloatField(mDisappearAnimationUtils, "mDelayScale", prefs.getFloat("disappear_animation_delay_scale", 0.8f));
+            XposedHelpers.setFloatField(mAppearAnimationUtils, "mDelayScale", ConfigUtils.getFloat("appear_animation_delay_scale", 2.0f));
+            XposedHelpers.setFloatField(mDisappearAnimationUtils, "mDelayScale", ConfigUtils.getFloat("disappear_animation_delay_scale", 0.8f));
 
             int ipID;
             String saved;
             for (int i = 0; i < 2; i++) {
                 boolean appear = i == 0;
                 if (appear)
-                    saved = prefs.getString("appear_animation_interpolator", "");
+                    saved = ConfigUtils.getString("appear_animation_interpolator", "");
                 else
-                    saved = prefs.getString("disappear_animation_interpolator", "");
+                    saved = ConfigUtils.getString("disappear_animation_interpolator", "");
                 switch (saved) {
                     case "accelerate_cubic":
                         ipID = android.R.interpolator.accelerate_cubic;
@@ -121,9 +121,9 @@ public class TimingTweaks {
                 else
                     XposedHelpers.setObjectField(mDisappearAnimationUtils, "mInterpolator", interpolator);
             }
-            XposedHook.logD("Executed setTimingFromConstructor");
+            XposedHook.logD("TimingTweaks", "Executed setTimingFromConstructor");
         } catch (Throwable t) {
-            XposedHook.logE("Error executing setTimingFromConstructor", t);
+            XposedHook.logE("TimingTweaks", "Error executing setTimingFromConstructor", t);
         }
 
     }
