@@ -225,8 +225,6 @@ public class PatternViewSettingsActivity extends Activity implements LockPattern
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            //noinspection deprecation
-            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
             mPrefs = getPreferenceManager().getSharedPreferences();
             if (!mPrefs.contains("line_width")) {
                 mPrefs.edit().putInt("line_width", getResources().getDimensionPixelSize(R.dimen.line_width_default)).apply();

@@ -29,8 +29,6 @@ public class GeneralSettingsActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            //noinspection deprecation
-            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
             addPreferencesFromResource(R.xml.preferences_general);
         }
 

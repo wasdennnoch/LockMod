@@ -26,8 +26,6 @@ public class ExperimentalSettingsActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            //noinspection deprecation
-            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
             File sharedPrefsDir = new File(getActivity().getFilesDir(), "../shared_prefs");
             File sharedPrefsFile = new File(sharedPrefsDir, getPreferenceManager().getSharedPreferencesName() + ".xml");
             if (sharedPrefsFile.exists()) {
