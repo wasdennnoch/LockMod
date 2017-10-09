@@ -149,8 +149,6 @@
     <string name="general_hide_launcher_icon">May require launcher restart</string>
     <string name="general_debug_log_title">Debug log</string>
     <string name="general_debug_log">Should only be enabled for testing/debugging, causes lag</string>
-    <string name="general_always_reload_title">Always reload settings</string>
-    <string name="general_always_reload">If disabled, the device has to be restarted in order to apply changes. Might decrease lag if disabled. Restart reqired to re-enable</string>
     <!-- /GENERAL -->
 
 

@@ -24,7 +24,6 @@ public class PatternTweaks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
                 XposedHook.logD("PatternTweaks", "KeyguardPatternView constructor afterHookedMethod");
-                XposedHook.reload_settings = ConfigUtils.getBoolean("always_reload", true);
                 XposedHook.debug = ConfigUtils.getBoolean("debug_log", false);
 
                 Context context;

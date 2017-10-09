@@ -13,7 +13,6 @@ import tk.wasdennnoch.lockmod.utils.ReflectionUtils;
 public class XposedHook implements IXposedHookLoadPackage {
 
     public static boolean debug = false;
-    public static boolean reload_settings = true;
 
     public static final String CLASS_LOCK_PATTERN_VIEW = "com.android.internal.widget.LockPatternView";
     public static final String CLASS_KEYGUARD_PATTERN_VIEW = "com.android.keyguard.KeyguardPatternView";
@@ -30,7 +29,7 @@ public class XposedHook implements IXposedHookLoadPackage {
         } else if (lpparam.packageName.equals("com.android.systemui")) {
             ConfigUtils.init(ReflectionUtils.getSystemContext());
             if (!ConfigUtils.getBoolean("can_read_prefs", false))
-                logW("XposedHook", "Preferences inaccessible via provicer");
+                logW("XposedHook", "Preferences inaccessible via provider");
             if (ConfigUtils.getBoolean("active_pattern_tweaks", false)) {
                 PatternTweaks.hookKeyguardPatternConstructor(lpparam.classLoader);
                 PatternTweaks.hookKeyguardPatternOnFinishInflate(lpparam.classLoader);

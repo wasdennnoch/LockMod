@@ -16,12 +16,6 @@
             android:summary="@string/general_debug_log"
             android:title="@string/general_debug_log_title"/>
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="always_reload"
-            android:summary="@string/general_always_reload"
-            android:title="@string/general_always_reload_title"/>
-
     </PreferenceCategory>
 
 </PreferenceScreen>
